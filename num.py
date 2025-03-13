@@ -12,78 +12,88 @@ def play_game():
         st.session_state.message = ""
         st.session_state.guess_history = []
 
-    # Custom CSS for styling
+    # Custom CSS for modern styling
     st.markdown("""
         <style>
-            /* Gradient background */
-            body {
-                background: linear-gradient(135deg, #FF9A9E 0%, #FAD0C4 100%);
-                background-attachment: fixed;
-                background-size: cover;
+            /* Gradient background with animation */
+            @keyframes gradientAnimation {
+                0% { background-position: 0% 50%; }
+                50% { background-position: 100% 50%; }
+                100% { background-position: 0% 50%; }
             }
-            /* Main container */
+            body {
+                background: linear-gradient(135deg, #6a11cb, #2575fc, #6a11cb);
+                background-size: 400% 400%;
+                animation: gradientAnimation 15s ease infinite;
+                font-family: 'Poppins', sans-serif;
+                color: white;
+            }
+            /* Glassmorphism container */
             .main-container {
-                background-color: rgba(255, 255, 255, 0.9);
+                background: rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(10px);
+                border-radius: 20px;
+                border: 1px solid rgba(255, 255, 255, 0.2);
                 padding: 30px;
-                border-radius: 15px;
-                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
                 margin: 20px auto;
                 max-width: 600px;
-            }
-            .stMain {
-                background:c4ebfa;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             }
             /* Title styling */
             .title {
-                font-size: 40px !important;
-                font-weight: bold;
-                color: #201cb3;
+                font-size: 48px !important;
+                font-weight: 700;
+                color: #6a11cb, #2575fc;
                 text-align: center;
                 margin-bottom: 20px;
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
             }
             /* Subtitle styling */
             .subtitle {
                 font-size: 24px !important;
-                color: rgb(235 14 14);
+                color: rgba#c3bdbd;
                 text-align: center;
                 margin-bottom: 20px;
             }
             /* Message styling */
             .message {
                 font-size: 20px !important;
-                font-weight: bold;
-                color: #FF5733;
+                font-weight: 600;
+                color: white;
                 text-align: center;
                 padding: 15px;
                 border-radius: 10px;
-                background-color: rgba(255, 255, 255, 0.8);
+                background: rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(5px);
                 margin-bottom: 20px;
-                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
             }
             /* Button styling */
             .stButton>button {
-                background-color: #4CAF50;
+                background: linear-gradient(135deg, #6a11cb, #2575fc);
                 color: white;
                 padding: 12px 28px;
-                border-radius: 8px;
+                border-radius: 12px;
                 border: none;
                 font-size: 18px;
-                font-weight: bold;
-                transition: background-color 0.3s ease;
+                font-weight: 600;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
                 width: 100%;
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
             }
             .stButton>button:hover {
-                background-color: #101010;
+                transform: scale(1.05);
+                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
             }
             /* Progress bar styling */
             .progress-bar {
-                background-color: #E0E0E0;
+                background: rgba(255, 255, 255, 0.2);
                 border-radius: 10px;
                 padding: 3px;
                 margin-bottom: 20px;
             }
             .progress-bar-fill {
-                background-color: #4CAF50;
+                background: linear-gradient(135deg, #6a11cb, #2575fc);
                 height: 20px;
                 border-radius: 10px;
                 transition: width 0.5s ease;
@@ -91,12 +101,13 @@ def play_game():
             /* Guess history styling */
             .guess-history {
                 font-size: 16px;
-                color: #555;
+                color: rgba(255, 255, 255, 0.9);
                 margin-top: 20px;
-                background-color: rgba(255, 255, 255, 0.8);
+                background: rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(5px);
                 padding: 15px;
                 border-radius: 10px;
-                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
             }
             .guess-history ul {
                 list-style-type: none;
@@ -104,9 +115,21 @@ def play_game():
             }
             .guess-history li {
                 padding: 10px;
-                background-color: #F5F5F5;
+                background: rgba(255, 255, 255, 0.1);
                 margin-bottom: 5px;
                 border-radius: 5px;
+            }
+            /* Input field styling */
+            .stNumberInput>div>div>input {
+                background: rgba(255, 255, 255, 0.1);
+                color: white;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                border-radius: 10px;
+                padding: 10px;
+            }
+            .stNumberInput>div>div>input:focus {
+                border-color: #6a11cb;
+                box-shadow: 0 0 8px rgba(106, 17, 203, 0.5);
             }
         </style>
         """, unsafe_allow_html=True)
@@ -124,7 +147,7 @@ def play_game():
         <div class="progress-bar">
             <div class="progress-bar-fill" style="width: {progress * 100}%;"></div>
         </div>
-        <p style="text-align: center; font-size: 16px; color: #555;">
+        <p style="text-align: center; font-size: 16px; color: rgba(255, 255, 255, 0.9);">
             Attempts: {st.session_state.attempts} / {st.session_state.max_attempts}
         </p>
     """, unsafe_allow_html=True)
